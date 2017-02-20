@@ -1,0 +1,32 @@
+﻿@model List<Web03.Models.Room>
+
+@foreach (var room in Model)
+{
+    string className = null;
+
+    if (room.IsReserved)
+    {
+        className = "reserved";
+
+    }
+    <h2 class="@className">Room #@room.Id</h2>
+
+    @if (room.IsReserved)
+    {
+        <label class="label label-danger">จองแล้ว</label>
+    }
+    <div>Area: @room.Area sq.m.</div>
+    <div>Price: @room.RentalFee Baht/Month</div>
+    <br />
+    <div class="well well-sm">
+        <form method="post">
+            <button class="btn btn-success btn-sm" formaction="~/Condo/Reserved/@room.Id">จอง</button>
+            <button class="btn btn-danger btn-sm" formaction="~/Condo/CancelReserved/@room.Id">ยกเลิกจอง</button>
+        </form>
+    </div>
+}
+<style>
+    h2.reserved {
+        color: silver;
+    }
+</style>
