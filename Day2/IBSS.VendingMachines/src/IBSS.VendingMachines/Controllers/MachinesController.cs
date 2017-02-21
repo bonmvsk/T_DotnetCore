@@ -9,31 +9,48 @@ namespace IBSS.VendingMachines.Controllers
 {
 		public class MachinesController : Controller
 		{
-				private static Machines _machine = new Machines();
+				private static List<Machines> s_machines = new List<Machines>();
 
-				public IActionResult Index()
+				static MachinesController()
 				{
-						return View(_machine);
+						s_machines = new List<Machines>();
+						s_machines.Add(new Machines() { Id = 1, AcceptableCoinsText = "5,10" });
+						s_machines.Add(new Machines() { Id = 2, AcceptableCoinsText = "1,10" });
+						s_machines.Add(new Machines() { Id = 3, AcceptableCoinsText = "1,5" });
+				}
+
+				public IActionResult Index(int? id)
+				{
+						if(id != null) {
+								s_machines.Find(p => p.Id == id);
+								return View(s_machines);
+						}
+						return View(s_machines);
 				}
 
 				[HttpPost]
-				public IActionResult AddCoin(decimal amount)
+				public IActionResult AddCoin(int id, decimal amount)
 				{
 						try
 						{
-								_machine.InsertCoin(amount);
+								var val = s_machines.SingleOrDefault(p => p.Id == id);
+								if (val == null) return NotFound();
+								val.InsertCoin(amount);
 						}
 						catch (Exception ex)
 						{
 								TempData["Error"] = ex.Message;
 						}
 
-						return RedirectToAction("Index");
+						return RedirectToAction("Index", new { id = id });
 				}
 
 				[HttpPost]
-				public IActionResult Cancel() {
-						_machine.Cancel();
+				public IActionResult Cancel(int id)
+				{
+						var val = s_machines.SingleOrDefault(p => p.Id == id);
+						if (val == null) return NotFound();
+						val.Cancel();
 						return RedirectToAction("Index");
 				}
 		}

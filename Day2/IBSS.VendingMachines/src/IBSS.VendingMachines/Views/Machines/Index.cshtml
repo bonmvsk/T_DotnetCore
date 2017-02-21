@@ -1,39 +1,47 @@
-﻿@model Machines
-@{
-		string className = "btn-info";
-		if(TempData["Error"] != null) {
-				className = "btn-danger";
-		}
-}
+﻿@model IEnumerable<Machines>
+
 <div class="container">
-		<h3>Vending Machine</h3>
-		<div class="col-md-3">
-				<label>Please add a coin:</label>
-				<form action="~/Machines/AddCoin" method="post">
-						<div class="form-group">
-								<button type="submit" class="btn btn-md @className" name="amount" value="1">1</button>
-								<button type="submit" class="btn btn-md btn-info" name="amount" value="5">5</button>
-								<button type="submit" class="btn btn-md btn-info" name="amount" value="10">10</button>
-						</div>
-				</form>
-				@if(TempData["Error"] != null){
-				<div class="alert alert-danger" role="alert">
-						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-						<span class="sr-only">Error:</span>
-						@TempData["Error"]
-				</div>
-				}
-		</div>
-		<div class="col-md-2">
-				<label>Total amount:</label>
-				<label class="well block">
-						@Model.TotalAmount
-				</label>
-				@if (Model.TotalAmount != 0)
+				@foreach (var machine in Model)
 				{
-				<form action="~/Machines/Cancel" method="post">
-						<button type="submit" class="btn btn-danger btn-sm">Cancel</button>
-				</form>
+						string className = "btn-info";
+						if (TempData["Error"] != null)
+						{
+								className = "btn-danger";
+						}
+
+						<div class="row">
+								<h3>Vending Machine @machine.Id</h3>
+								<hr>
+								<div class="col-md-3">
+										<label>Please add a coin:</label>
+										<form action="~/Machines/AddCoin/@machine.Id" method="post">
+												<div class="form-group">
+														<button type="submit" class="btn btn-md @className" name="amount" value="1">1</button>
+														<button type="submit" class="btn btn-md btn-info" name="amount" value="5">5</button>
+														<button type="submit" class="btn btn-md btn-info" name="amount" value="10">10</button>
+												</div>
+										</form>
+										@if (TempData["Error"] != null)
+										{
+										<div class="alert alert-danger" role="alert">
+												<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+												<span class="sr-only">Error:</span>
+												@TempData["Error"]
+										</div>
+										}
+								</div>
+								<div class="col-md-2">
+										<label>Total amount:</label>
+										<label class="well block">
+												@machine.TotalAmount
+										</label>
+										@if (machine.TotalAmount != 0)
+										{
+										<form action="~/Machines/Cancel" method="post">
+												<button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+										</form>
+										}
+								</div>
+						</div>
 				}
-		</div>
 </div>
