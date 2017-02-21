@@ -1,8 +1,8 @@
-﻿@model IEnumerable<Machines>
+﻿@model Machines
 
 <div class="container">
-				@foreach (var machine in Model)
-				{
+				@*@foreach (var machine in Model)*@
+				@{
 						string className = "btn-info";
 						if (TempData["Error"] != null)
 						{
@@ -10,13 +10,13 @@
 						}
 
 						<div class="row">
-								<h3>Vending Machine @machine.Id</h3>
+								<h3>Vending Machine @Model.Id</h3>
 								<hr>
 								<div class="col-md-3">
 										<label>Please add a coin:</label>
-										<form action="~/Machines/AddCoin/@machine.Id" method="post">
+										<form action="~/Machines/AddCoin/@Model.Id" method="post">
 												<div class="form-group">
-														<button type="submit" class="btn btn-md @className" name="amount" value="1">1</button>
+														<button type="submit" class="btn btn-md btn-info" name="amount" value="1">1</button>
 														<button type="submit" class="btn btn-md btn-info" name="amount" value="5">5</button>
 														<button type="submit" class="btn btn-md btn-info" name="amount" value="10">10</button>
 												</div>
@@ -33,11 +33,11 @@
 								<div class="col-md-2">
 										<label>Total amount:</label>
 										<label class="well block">
-												@machine.TotalAmount
+												@Model.TotalAmount
 										</label>
-										@if (machine.TotalAmount != 0)
+										@if (Model.TotalAmount != 0)
 										{
-										<form action="~/Machines/Cancel" method="post">
+										<form action="~/Machines/Cancel/@Model.Id" method="post">
 												<button type="submit" class="btn btn-danger btn-sm">Cancel</button>
 										</form>
 										}

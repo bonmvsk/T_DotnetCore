@@ -49,7 +49,7 @@ namespace IBSS.VendingMachines.Models
 
 				public void Cancel()
 				{
-						_totalAmount = 0;
+						_totalAmount = 0m;
 				}
 		}
 }

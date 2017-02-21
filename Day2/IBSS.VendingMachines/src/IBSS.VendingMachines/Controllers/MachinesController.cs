@@ -21,11 +21,9 @@ namespace IBSS.VendingMachines.Controllers
 
 				public IActionResult Index(int? id)
 				{
-						if(id != null) {
-								s_machines.Find(p => p.Id == id);
-								return View(s_machines);
-						}
-						return View(s_machines);
+						if (id == null) return NotFound();
+						var val = s_machines.Find(p => p.Id == id);
+						return View(val);
 				}
 
 				[HttpPost]
