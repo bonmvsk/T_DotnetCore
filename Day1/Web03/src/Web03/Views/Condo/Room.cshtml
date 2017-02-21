@@ -1,4 +1,4 @@
-﻿@model List<Web03.Models.Room>
+﻿@model IEnumerable<Web03.Models.Room>
 
 @foreach (var room in Model)
 {
@@ -13,7 +13,7 @@
 
     @if (room.IsReserved)
     {
-        <label class="label label-danger">จองแล้ว</label>
+        <div class="label label-danger"><i class="fa fa-check"></i> จองแล้ว</div>
     }
     <div>Area: @room.Area sq.m.</div>
     <div>Price: @room.RentalFee Baht/Month</div>
@@ -25,8 +25,3 @@
         </form>
     </div>
 }
-<style>
-    h2.reserved {
-        color: silver;
-    }
-</style>

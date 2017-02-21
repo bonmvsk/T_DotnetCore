@@ -1,0 +1,30 @@
+﻿@using Web03.Models
+
+<div class="container">
+	@foreach (var room in Model)
+	{
+		string className = null;
+
+		if (room.IsReserved)
+		{
+			className = "reserved";
+
+		}
+		<div class="card">
+			<h2 class="@className">Room #@room.Id</h2>
+			@if (room.IsReserved)
+			{
+			<div class="label label-danger"><i class="fa fa-check"></i> จองแล้ว</div>
+			}
+			<div>Area: @room.Area sq.m.</div>
+			<div>Price: @room.RentalFee Baht/Month</div>
+		</div>
+	}
+</div>
+
+<style>
+	.card{
+		border: 1px;
+		border-radius: 5px;
+	}
+</style>
