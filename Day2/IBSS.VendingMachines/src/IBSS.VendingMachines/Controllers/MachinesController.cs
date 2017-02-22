@@ -4,26 +4,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using IBSS.VendingMachines.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using IBSS.VendingMachines.Data;
 
 namespace IBSS.VendingMachines.Controllers
 {
 		public class MachinesController : Controller
 		{
-				private static List<Machines> s_machines = new List<Machines>();
+				private MachineDB _db;
 
-				static MachinesController()
+				public MachinesController(MachineDB db)
 				{
-						s_machines = new List<Machines>();
-						s_machines.Add(new Machines() { Id = 1, AcceptableCoinsText = "5,10" });
-						s_machines.Add(new Machines() { Id = 2, AcceptableCoinsText = "1,10" });
-						s_machines.Add(new Machines() { Id = 3, AcceptableCoinsText = "1,5" });
+						_db = db;
 				}
 
 				public IActionResult Index(int? id)
 				{
-						if (id == null) return NotFound();
-						var val = s_machines.Find(p => p.Id == id);
-						return View(val);
+						Machines _machine;
+						if (id == null)
+						{
+								_machine = _db.Machines.FirstOrDefault();
+						}
+						else
+						{
+								_machine = _db.Machines.SingleOrDefault(p => p.Id == id);
+						}
+						if (_machine == null) return NotFound();
+						ViewBag.MachineId = new SelectList(_db.Machines, "Id", "Name", selectedValue: id);
+						return View(_machine);
 				}
 
 				[HttpPost]
@@ -31,9 +39,10 @@ namespace IBSS.VendingMachines.Controllers
 				{
 						try
 						{
-								var val = s_machines.SingleOrDefault(p => p.Id == id);
+								var val = _db.Machines.SingleOrDefault(p => p.Id == id);
 								if (val == null) return NotFound();
 								val.InsertCoin(amount);
+								_db.SaveChanges();
 						}
 						catch (Exception ex)
 						{
@@ -46,9 +55,10 @@ namespace IBSS.VendingMachines.Controllers
 				[HttpPost]
 				public IActionResult Cancel(int id)
 				{
-						var val = s_machines.SingleOrDefault(p => p.Id == id);
+						var val = _db.Machines.SingleOrDefault(p => p.Id == id);
 						if (val == null) return NotFound();
 						val.Cancel();
+						_db.SaveChanges();
 						return RedirectToAction("Index", new { id = id });
 				}
 		}

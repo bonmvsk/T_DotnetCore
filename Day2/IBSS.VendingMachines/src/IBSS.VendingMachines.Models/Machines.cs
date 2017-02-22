@@ -9,13 +9,19 @@ namespace IBSS.VendingMachines.Models
 		{
 				private decimal _totalAmount = 0m;
 				private decimal[] _acceptableCoins;
-				private string _acceptableCoinsText;
+				private string __acceptableCoinsText;
 
 				public int Id { get; set; }
+
+				public string Name { get; set; }
 
 				public decimal TotalAmount
 				{
 						get { return _totalAmount; }
+						private set
+						{
+								_totalAmount = value;
+						}
 				}
 
 				/// <summary>
@@ -26,15 +32,18 @@ namespace IBSS.VendingMachines.Models
 				{
 						get
 						{
-								return _acceptableCoinsText;
+								return __acceptableCoinsText;
 						}
 						set
 						{
-								_acceptableCoinsText = value;
-								if (value != null)
-								{
-										_acceptableCoins = _acceptableCoinsText.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToArray();
-								}
+								if (value == null) throw new ArgumentNullException(nameof(value));
+								__acceptableCoinsText = value;
+								decimal ds;
+								_acceptableCoins = value
+																		.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+																		.Select(s => decimal.TryParse(s, out ds) ? ds : -1)
+																		.Where(d => d > 0)
+																		.ToArray();
 						}
 				}
 

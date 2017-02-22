@@ -10,11 +10,11 @@
 						}
 
 						<div class="row">
-								<h3>Vending Machine @Model.Id</h3>
+								<h3>Vending Machine @Html.DropDownList("MachineId")</h3>
 								<hr>
 								<div class="col-md-3">
 										<label>Please add a coin:</label>
-										<form action="~/Machines/AddCoin/@Model.Id" method="post">
+										<form asp-controller="Machines" asp-action="AddCoin" asp-route-id="@Model.Id" method="post">
 												<div class="form-group">
 														<button type="submit" class="btn btn-md btn-info" name="amount" value="1">1</button>
 														<button type="submit" class="btn btn-md btn-info" name="amount" value="5">5</button>
@@ -45,3 +45,13 @@
 						</div>
 				}
 </div>
+
+@section scripts {
+		<script>
+				$("select#MachineId").change(function () {
+						var mId = $(this).val();
+						var url = "@Url.Action("Index", "Machines", new { id = (int?)null })" + "?id=" + mId;
+						window.location = url;
+				})
+		</script>
+}
