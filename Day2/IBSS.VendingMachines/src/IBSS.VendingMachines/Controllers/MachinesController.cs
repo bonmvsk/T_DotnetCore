@@ -49,7 +49,7 @@ namespace IBSS.VendingMachines.Controllers
 						var val = s_machines.SingleOrDefault(p => p.Id == id);
 						if (val == null) return NotFound();
 						val.Cancel();
-						return RedirectToAction("Index");
+						return RedirectToAction("Index", new { id = id });
 				}
 		}
 }

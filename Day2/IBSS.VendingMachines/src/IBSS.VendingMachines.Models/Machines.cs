@@ -31,7 +31,10 @@ namespace IBSS.VendingMachines.Models
 						set
 						{
 								_acceptableCoinsText = value;
-								_acceptableCoins = _acceptableCoinsText.Trim().Split(',').Select(decimal.Parse).ToArray();
+								if (value != null)
+								{
+										_acceptableCoins = _acceptableCoinsText.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse).ToArray();
+								}
 						}
 				}
 
@@ -42,7 +45,7 @@ namespace IBSS.VendingMachines.Models
 						if (!_acceptableCoins.Contains(amount)) // (amount == 1)
 						{
 								throw new ArgumentException($"Sorry. {amount} Bath coin is not acception.", nameof(amount));
-						};
+						}
 
 						_totalAmount += amount;
 				}
