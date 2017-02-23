@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace IBSS.VendingMachines.Models
 {
-    public class Slot
-    {
-				public int Id { get; set; }
+		public class Slot
+		{
+				private int m_quantity;
 
-				[Required]
-				public int MachineId { get; set; }
-				
-				[Required]
-				public int ProductId { get; set; }
+				[Key]
+				public int Id { get; private set; }
 
-				public int ProductAmount { get; set; }
+				[Range(0, 999)]
+				public int Quantity { get; set; }
+
+				public Product Product { get; set; }
 		}
 }

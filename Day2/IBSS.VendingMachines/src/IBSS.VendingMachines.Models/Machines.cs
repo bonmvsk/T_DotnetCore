@@ -10,6 +10,7 @@ namespace IBSS.VendingMachines.Models
 				private decimal _totalAmount = 0m;
 				private decimal[] _acceptableCoins;
 				private string __acceptableCoinsText;
+				private decimal _sellAmount = 0m;
 
 				public int Id { get; set; }
 
@@ -23,6 +24,8 @@ namespace IBSS.VendingMachines.Models
 								_totalAmount = value;
 						}
 				}
+
+				public ICollection<Slot> Slots { get; set; }
 
 				/// <summary>
 				/// กำหนดเรียญที่รับได้ในรูปแบบคอมม่าคั่น
@@ -49,6 +52,16 @@ namespace IBSS.VendingMachines.Models
 
 				public decimal[] AcceptableCoins => _acceptableCoins;
 
+				public decimal SellAmount
+				{
+						get { return _sellAmount; }
+						set { _sellAmount = value; }
+				}
+				public Machines()
+				{
+						Slots = new HashSet<Slot>();
+				}
+
 				public void InsertCoin(decimal amount)
 				{
 						if (!_acceptableCoins.Contains(amount)) // (amount == 1)
@@ -62,6 +75,15 @@ namespace IBSS.VendingMachines.Models
 				public void Cancel()
 				{
 						_totalAmount = 0m;
+				}
+
+				public bool IsSellable(Slot s)
+				{
+						return s != null
+									 && Slots.Contains(s)
+									 && s.Product != null
+									 && _totalAmount >= s.Product.Price
+									 && s.Quantity > 0;
 				}
 		}
 }

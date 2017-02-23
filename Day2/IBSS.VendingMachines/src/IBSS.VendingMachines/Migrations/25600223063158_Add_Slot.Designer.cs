@@ -8,12 +8,13 @@ using IBSS.VendingMachines.Data;
 namespace IBSS.VendingMachines.Migrations
 {
     [DbContext(typeof(MachineDB))]
-    partial class MachineDBModelSnapshot : ModelSnapshot
+    [Migration("25600223063158_Add_Slot")]
+    partial class Add_Slot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
+                .HasAnnotation("ProductVersion", "1.0.1")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("IBSS.VendingMachines.Models.Machines", b =>
@@ -24,8 +25,6 @@ namespace IBSS.VendingMachines.Migrations
                     b.Property<string>("AcceptableCoinsText");
 
                     b.Property<string>("Name");
-
-                    b.Property<decimal>("SellAmount");
 
                     b.Property<decimal>("TotalAmount");
 
