@@ -21,7 +21,7 @@ namespace IBSS.VendingMachines.Controllers
 
 				public async Task<IActionResult> Index(int? id)
 				{
-						Machines _machine;
+						Machine _machine;
 						if (id == null)
 						{
 								_machine = _db.Machines
@@ -107,8 +107,17 @@ namespace IBSS.VendingMachines.Controllers
 						return Content("OK");
 				}
 
-				public IActionResult Sell(int? id, int? slot) {
-
+				[HttpPost]
+				public IActionResult Sell(int? id, int? slotId) {
+						if (id == null || slotId == null) return NotFound();
+						Machine _machine;
+						_machine = _db.Machines
+												  .Include(m => m.Slots)
+													.ThenInclude((Slot s) => s.Product)
+													.SingleOrDefault(p => p.Id == id);
+													
+						_machine.SellItem(slotId.Value);
+						_db.SaveChanges();
 						return RedirectToAction("Index", new { id = id });
 				}
 		}

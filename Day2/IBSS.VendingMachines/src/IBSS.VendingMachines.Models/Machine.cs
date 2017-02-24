@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace IBSS.VendingMachines.Models
 {
-		public class Machines
+		public class Machine
 		{
 				private decimal _totalAmount = 0m;
 				private decimal[] _acceptableCoins;
@@ -57,7 +57,7 @@ namespace IBSS.VendingMachines.Models
 						get { return _sellAmount; }
 						set { _sellAmount = value; }
 				}
-				public Machines()
+				public Machine()
 				{
 						Slots = new HashSet<Slot>();
 				}
@@ -84,6 +84,18 @@ namespace IBSS.VendingMachines.Models
 									 && s.Product != null
 									 && _totalAmount >= s.Product.Price
 									 && s.Quantity > 0;
+				}
+
+				public void SellItem(int slotId)
+				{
+						var s = Slots.SingleOrDefault(p => p.Id == slotId);
+						if (IsSellable(s))
+						{
+								_sellAmount += s.Product.Price;
+								s.Quantity -= 1;
+								_totalAmount = 0m;
+						}
+
 				}
 		}
 }

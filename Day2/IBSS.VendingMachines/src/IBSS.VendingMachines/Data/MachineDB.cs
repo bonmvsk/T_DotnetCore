@@ -9,7 +9,7 @@ namespace IBSS.VendingMachines.Data
 {
 		public class MachineDB : DbContext
 		{
-				public DbSet<Machines> Machines { get; set; }
+				public DbSet<Machine> Machines { get; set; }
 				public DbSet<Product> Products { get; set; }
 
 				public MachineDB(DbContextOptions<MachineDB> options) : base(options)

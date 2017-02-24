@@ -1,4 +1,4 @@
-﻿@model Machines
+﻿@model Machine
 
 <div class="container">
 		@*@foreach (var machine in Model)*@
@@ -13,10 +13,10 @@
 						<h3>Vending Machine @Html.DropDownList("MachineId")</h3>
 						<hr />
 						<div class="col-xs-11 col-sm-8 col-md-7 col-lg-5">
-								<form class="form-group" asp-controller="Machines" asp-action="Sell" method="post">
+								<form class="form-group" asp-controller="Machines" asp-action="Sell" asp-route-id="@Model.Id" method="post">
 										@foreach (var slot in Model.Slots)
 										{
-												if (slot.Product == null || slot.Quantity == 0)
+												if (slot.Product == null)
 												{
 												<button type="button" class="btn btn-default slot" disabled>
 														<div>Empty</div>
@@ -25,7 +25,7 @@
 												}
 												else
 												{
-												<button type="submit" class="btn slot" disabled="@(!Model.IsSellable(slot))" name="slot" value="@slot.Id">
+												<button type="submit" class="btn slot" disabled="@(!Model.IsSellable(slot))" name="slotId" value="@slot.Id">
 														<div class="name">@slot.Product.Name</div>
 														<div>@slot.Product.Price</div>
 														<div class="quantity text-danger">@Html.Raw(Items(slot.Quantity))</div>
