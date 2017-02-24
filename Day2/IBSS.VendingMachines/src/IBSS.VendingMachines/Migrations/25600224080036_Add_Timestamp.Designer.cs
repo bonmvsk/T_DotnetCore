@@ -8,9 +8,10 @@ using IBSS.VendingMachines.Data;
 namespace IBSS.VendingMachines.Migrations
 {
     [DbContext(typeof(MachineDB))]
-    partial class MachineDBModelSnapshot : ModelSnapshot
+    [Migration("25600224080036_Add_Timestamp")]
+    partial class Add_Timestamp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")

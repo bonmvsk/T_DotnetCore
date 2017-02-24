@@ -147,5 +147,6 @@ namespace IBSS.VendingMachines.Controllers
         {
             return _context.Products.Any(e => e.Id == id);
         }
+
     }
 }
