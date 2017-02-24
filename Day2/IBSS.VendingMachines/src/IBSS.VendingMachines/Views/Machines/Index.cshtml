@@ -1,47 +1,97 @@
-﻿@model Machines
+﻿@model Machine
 
 <div class="container">
-				@*@foreach (var machine in Model)*@
-				@{
-						string className = "btn-info";
-						if (TempData["Error"] != null)
-						{
-								className = "btn-danger";
-						}
-
-						<div class="row">
-								<h3>Vending Machine @Model.Id</h3>
-								<hr>
-								<div class="col-md-3">
-										<label>Please add a coin:</label>
-										<form action="~/Machines/AddCoin/@Model.Id" method="post">
-												<div class="form-group">
-														<button type="submit" class="btn btn-md btn-info" name="amount" value="1">1</button>
-														<button type="submit" class="btn btn-md btn-info" name="amount" value="5">5</button>
-														<button type="submit" class="btn btn-md btn-info" name="amount" value="10">10</button>
-												</div>
-										</form>
-										@if (TempData["Error"] != null)
-										{
-										<div class="alert alert-danger" role="alert">
-												<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-												<span class="sr-only">Error:</span>
-												@TempData["Error"]
-										</div>
-										}
-								</div>
-								<div class="col-md-2">
-										<label>Total amount:</label>
-										<label class="well block">
-												@Model.TotalAmount
-										</label>
-										@if (Model.TotalAmount != 0)
-										{
-										<form action="~/Machines/Cancel/@Model.Id" method="post">
-												<button type="submit" class="btn btn-danger btn-sm">Cancel</button>
-										</form>
-										}
-								</div>
-						</div>
+		@*@foreach (var machine in Model)*@
+		@{
+				string className = "btn-info";
+				if (TempData["Error"] != null)
+				{
+						className = "btn-danger";
 				}
+
+				<div class="row">
+						<h3>Vending Machine @Html.DropDownList("MachineId")</h3>
+						<hr />
+						<div class="col-xs-11 col-sm-8 col-md-7 col-lg-5">
+								<form class="form-group" asp-controller="Machines" asp-action="Sell" asp-route-id="@Model.Id" method="post">
+										@foreach (var slot in Model.Slots)
+										{
+												if (slot.Product == null)
+												{
+												<button type="button" class="btn btn-default slot" disabled>
+														<div>Empty</div>
+														<div>slot</div>
+												</button>
+												}
+												else
+												{
+												<button type="submit" class="btn slot" disabled="@(!Model.IsSellable(slot))" name="slotId" value="@slot.Id">
+														<div class="name">@slot.Product.Name</div>
+														<div>@slot.Product.Price</div>
+														<div class="quantity text-danger">@Html.Raw(Items(slot.Quantity))</div>
+												</button>
+												}
+										}
+								</form>
+						</div>
+				</div>
+				<div class="row">
+						<hr />
+						<div class="col-md-3">
+								<label>Please add a coin:</label>
+								<form asp-controller="Machines" asp-action="AddCoin" asp-route-id="@Model.Id" method="post">
+										<div class="form-group">
+												<button type="submit" class="btn btn-md btn-info" name="amount" value="1">1</button>
+												<button type="submit" class="btn btn-md btn-info" name="amount" value="5">5</button>
+												<button type="submit" class="btn btn-md btn-info" name="amount" value="10">10</button>
+										</div>
+								</form>
+								@if (TempData["Error"] != null)
+								{
+								<div class="alert alert-danger" role="alert">
+										<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+										<span class="sr-only">Error:</span>
+										@TempData["Error"]
+								</div>			}
+						</div>
+						<div class="col-md-2">
+								<label>Total amount:</label>
+								<label class="well block">
+										@Model.TotalAmount
+								</label>
+								@if (Model.TotalAmount != 0)
+								{
+								<form action="~/Machines/Cancel/@Model.Id" method="post">
+										<button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+								</form>			}
+						</div>
+				</div>
+				<div class="row">
+						<hr />
+						<label>Machine's Total amount:</label>
+						<h3>@Model.SellAmount THB</h3>
+				</div>
+		}
 </div>
+
+@functions {
+		public string Items(int n)
+		{
+				var output = "";
+				for (int i = 0; i < n; i++)
+				{
+						output += "<span class='glyphicon glyphicon-ice-lolly'></span>";
+				}
+				return output;
+		}
+}
+
+@section scripts {
+		<script>
+				$("select#MachineId").change(function () {
+						var mId = $(this).val();
+						var url = "@Url.Action("Index", "Machines", new { id = (int?)null })" + "?id=" + mId;
+						window.location = url;
+				})
+		</script>
+}

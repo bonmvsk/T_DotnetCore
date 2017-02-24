@@ -15,29 +15,29 @@ using IBSS.VendingMachines.Services;
 
 namespace IBSS.VendingMachines
 {
-    public class Startup
-    {
-        public Startup(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+		public class Startup
+		{
+				public Startup(IHostingEnvironment env)
+				{
+						var builder = new ConfigurationBuilder()
+								.SetBasePath(env.ContentRootPath)
+								.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+								.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
-            if (env.IsDevelopment())
-            {
-                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
+						if (env.IsDevelopment())
+						{
+								// For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
+								builder.AddUserSecrets();
 
-                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-                builder.AddApplicationInsightsSettings(developerMode: true);
-            }
+								// This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
+								builder.AddApplicationInsightsSettings(developerMode: true);
+						}
 
-            builder.AddEnvironmentVariables();
-            Configuration = builder.Build();
-        }
+						builder.AddEnvironmentVariables();
+						Configuration = builder.Build();
+				}
 
-        public IConfigurationRoot Configuration { get; }
+				public IConfigurationRoot Configuration { get; }
 
 				// This method gets called by the runtime. Use this method to add services to the container.
 				public void ConfigureServices(IServiceCollection services)
@@ -47,6 +47,9 @@ namespace IBSS.VendingMachines
 
 						services.AddDbContext<ApplicationDbContext>(options =>
 								options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+						services.AddDbContext<MachineDB>(options =>
+								options.UseSqlServer(Configuration.GetConnectionString("MachineDB")));
 
 						services.AddIdentity<ApplicationUser, IdentityRole>()
 								.AddEntityFrameworkStores<ApplicationDbContext>()
@@ -63,41 +66,41 @@ namespace IBSS.VendingMachines
 						services.AddSession();
 				}
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+				// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+				public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+				{
+						loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+						loggerFactory.AddDebug();
 
-            app.UseApplicationInsightsRequestTelemetry();
+						app.UseApplicationInsightsRequestTelemetry();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-                app.UseBrowserLink();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+						if (env.IsDevelopment())
+						{
+								app.UseDeveloperExceptionPage();
+								app.UseDatabaseErrorPage();
+								app.UseBrowserLink();
+						}
+						else
+						{
+								app.UseExceptionHandler("/Home/Error");
+						}
 
-            app.UseApplicationInsightsExceptionTelemetry();
+						app.UseApplicationInsightsExceptionTelemetry();
 
-            app.UseStaticFiles();
+						app.UseStaticFiles();
 
-            app.UseIdentity();
+						app.UseIdentity();
 
 						// Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
 						app.UseSession();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-        }
-    }
+						app.UseMvc(routes =>
+						{
+								routes.MapRoute(
+										name: "default",
+										template: "{controller=Home}/{action=Index}/{id?}");
+						});
+				}
+		}
 }
